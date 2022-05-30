@@ -5,6 +5,7 @@
     "@types/aws-lambda": "^8.10.97"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "emojis-list": "^3.0.0"
   }
 }
