@@ -32,6 +32,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
     return {
         statusCode: 200,
-        body: emojifier(payload.message),
+        body: JSON.stringify( { message: emojifier(payload.message) }),
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
     };
 }

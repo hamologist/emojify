@@ -20,14 +20,8 @@ export class Emojify extends Construct {
           'OPTIONS',
           'POST'
         ],
-        allowHeaders: [
-          'Content-Type',
-          'X-Amz-Date',
-          'Authorization',
-          'X-Api-Key',
-          'X-Amz-Security-Token'
-        ],
-        allowOrigins: ['*'],
+        allowHeaders: apigateway.Cors.DEFAULT_HEADERS,
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
       },
       deployOptions: props.stageOptions,
     });
