@@ -36,12 +36,14 @@ export class Emojify extends Construct {
       runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.Code.fromAsset('src/emojify', { exclude: ['*.ts'] }),
       handler: 'rest-handler.handler',
+      memorySize: 256,
     });
 
     this.discordWebsocketHandler = new lambda.Function(this, 'EmojifyDiscordWebsocketHandler', {
       runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.Code.fromAsset('src/emojify', { exclude: ['*.ts'] }),
       handler: 'discord-websocket-handler.handler',
+      memorySize: 256,
     });
 
     const emojifyResource = this.restApi.root.addResource('emojify');

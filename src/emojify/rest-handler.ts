@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import emojis from './emojis';
 import { isRequestPayload, RequestPayload } from './models/request-payload';
+import { emojifier } from './emojifier';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const body = event.body;
@@ -30,22 +30,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         };
     }
 
-    const seperated = payload.message.split(' ');
-    for (let i = 0; i < seperated.length; i ++) {
-        const checkOne = Math.floor(Math.random() * 2);
-        const checkTwo = Math.floor(Math.random() * 3);
-
-        if (checkOne === 1) {
-            for (let emojiCount = Math.floor(Math.random() * 4); emojiCount > 0; emojiCount--) {
-                seperated[i] += emojis[Math.floor(Math.random() * emojis.length)];
-            }
-        } else if (checkTwo === 1) {
-            seperated[i] += emojis[Math.floor(Math.random() * emojis.length)];
-        }
-    }
-
     return {
         statusCode: 200,
-        body: seperated.join(' '),
+        body: emojifier(payload.message),
     };
 }

@@ -1,0 +1,7 @@
+{
+  "ssm:account=770225659331:parameterName=/emojify/prod/root-domain:region=us-east-1": "hamologist.com",
+  "hosted-zone:account=770225659331:domainName=hamologist.com:region=us-east-1": {
+    "Id": "/hostedzone/ZWQ5Z57L1P3QS",
+    "Name": "hamologist.com."
+  }
+}
