@@ -1,6 +1,6 @@
 import EmojiRecord from 'emojilib';
 import Fastify from 'fastify';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 type Response = {
   output: string;
@@ -30,6 +30,8 @@ const payloadSchema = z.object({
   input: z.string().max(2000),
 });
 
+type PayloadSchema = z.infer<typeof payloadSchema>;
+
 function emojifier(message: string): string {
     const seperated = message.split(' ');
     for (let i = 0; i < seperated.length; i ++) {
@@ -48,8 +50,23 @@ function emojifier(message: string): string {
     return seperated.join(' ');
 }
 
-fastify.post('/', async (request) => {
-  const payload = payloadSchema.parse(request.body);
+fastify.post('/', async (request, reply) => {
+  let payload: PayloadSchema;
+  try {
+    payload = payloadSchema.parse(request.body);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      reply.status(400).send({
+        statusCode: 400,
+        error: 'invalid-payload',
+        issues: error.issues,
+        message: error.issues[0]?.message
+      });
+      return;
+    }
+
+    throw error;
+  }
 
   return {
     output: emojifier(payload.input),
