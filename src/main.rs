@@ -1,31 +1,43 @@
-use std::io::{self};
+use std::io::{self, Read};
+use std::fs;
 use clap::{self, ArgAction};
-use emojis::Emoji;
-use emojify::Emojify;
+use emojify::Emojifier;
 
 fn main() {
     let matches = clap::Command::new("test")
         .about("Adds emojis throughout a provided input")
         .arg(
-            clap::Arg::new("hello")
-                .short('a')
-                .action(ArgAction::SetTrue)
-                .help("Outputs HELLO WORLD")
+            clap::Arg::new("file")
+                .short('f')
+                .long("file")
+                .action(ArgAction::Set)
+                .help("Reads input from the provided file instead.")
         )
         .get_matches();
 
-    if matches.get_flag("hello") {
-        println!("HELLO WORLD!");
-    } else {
-        println!("...");
-    }
+    let filename: Option<&String> = matches.get_one("file");
+    let input: String = match filename {
+        Some(filename) => {
+            match fs::read_to_string(filename) {
+                Ok(input) => input,
+                Err(_) => {
+                    println!("Failed to read input from file.");
+                    return;
+                }
+            }
+        }
+        None => {
+            let mut input: String = String::new();
+            match io::stdin().read_to_string(&mut input) {
+                Ok(_) => input,
+                Err(_) => {
+                    println!("Failed to read input from stdin.");
+                    return;
+                }
+            }
+        }
+    };
 
-    let mut input = Vec::new();
-    for line in io::stdin().lines() {
-        input.push(line.unwrap());
-    }
-
-    println!("{}", input.join("\n"));
-
-    let emojify = Emojify::new();
+    let mut emojifier = Emojifier::new();
+    println!("{}", emojifier.emojify(input));
 }
