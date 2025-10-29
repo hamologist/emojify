@@ -1,18 +1,7 @@
 use std::io::{self};
 use clap::{self, ArgAction};
 use emojis::Emoji;
-
-fn build_emoji_store() -> Vec<&'static Emoji> {
-    let mut store: Vec<&Emoji> = Vec::new();
-    for emoji in emojis::iter() {
-        if emoji.group() == emojis::Group::Flags {
-            continue;
-        }
-        store.push(emoji);
-    }
-
-    return store;
-}
+use emojify::Emojify;
 
 fn main() {
     let matches = clap::Command::new("test")
@@ -37,4 +26,6 @@ fn main() {
     }
 
     println!("{}", input.join("\n"));
+
+    let emojify = Emojify::new();
 }
