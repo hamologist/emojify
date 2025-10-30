@@ -1,7 +1,7 @@
 use emojis::{Emoji, SkinTone};
 use rand::prelude::*;
 
-fn build_emoji_store() -> Vec<&'static Emoji> {
+pub fn build_emoji_store() -> Vec<&'static Emoji> {
     let mut store: Vec<&Emoji> = Vec::new();
     for emoji in emojis::iter() {
         if emoji.group() == emojis::Group::Flags {
@@ -12,8 +12,8 @@ fn build_emoji_store() -> Vec<&'static Emoji> {
                 if skin_tone != SkinTone::Default {
                     continue;
                 }
-            },
-            None => {},
+            }
+            None => {}
         }
         store.push(emoji);
     }
@@ -22,8 +22,8 @@ fn build_emoji_store() -> Vec<&'static Emoji> {
 }
 
 pub struct Emojifier {
-    emoji_store: Vec<&'static Emoji>,
-    rng: ThreadRng,
+    pub emoji_store: Vec<&'static Emoji>,
+    pub rng: ThreadRng,
 }
 
 impl Emojifier {
@@ -31,14 +31,14 @@ impl Emojifier {
         return Self {
             emoji_store: build_emoji_store(),
             rng: rand::rng(),
-        }
+        };
     }
 
     pub fn random_emoji(&mut self) -> &'static Emoji {
         self.emoji_store[self.rng.random_range(0..self.emoji_store.len())]
     }
 
-    pub fn emojify(&mut self, text: String) -> String {
+    pub fn emojify(&mut self, text: &String) -> String {
         let mut result: Vec<String> = Vec::new();
         for word in text.trim().split(' ') {
             result.push(word.to_string());
