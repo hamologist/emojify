@@ -1,5 +1,7 @@
+use std::sync::Arc;
+
 use axum::{
-    Router, extract::Json, extract::rejection::JsonRejection, http::StatusCode, routing::post,
+    Router, extract::Json, extract::rejection::JsonRejection, http::StatusCode, routing::post, extract::State,
 };
 use clap::{self, ArgAction};
 use emojify::Emojifier;
@@ -9,6 +11,11 @@ use serde_json::{Value, json};
 #[derive(Deserialize, Debug)]
 struct EmojifyRequest {
     input: String,
+}
+
+#[derive(Clone)]
+struct AppState {
+    emojifier: Arc<Emojifier>,
 }
 
 #[tokio::main]
@@ -34,7 +41,12 @@ async fn main() {
     let host = matches.get_one::<String>("host").unwrap();
     let port = matches.get_one::<String>("port").unwrap();
 
-    let app = Router::new().route("/", post(emojify));
+    let shared_state = AppState {
+        emojifier: Arc::new(Emojifier::new()),
+    };
+
+    let app = Router::new().route("/", post(emojify))
+        .with_state(shared_state);
 
     let listener = tokio::net::TcpListener::bind(format!("{}:{}", host, port))
         .await
@@ -55,6 +67,7 @@ async fn main() {
 }
 
 async fn emojify(
+    State(state): State<AppState>,
     payload: Result<Json<EmojifyRequest>, JsonRejection>,
 ) -> (StatusCode, Json<Value>) {
     let emojify_request = match payload {
@@ -69,7 +82,7 @@ async fn emojify(
             );
         }
     };
-    let payload = Emojifier::new().emojify(&emojify_request.input);
+    let payload = state.emojifier.emojify(&emojify_request.input);
 
     return (
         StatusCode::OK,

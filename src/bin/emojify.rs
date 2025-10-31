@@ -35,6 +35,6 @@ fn main() {
         }
     };
 
-    let mut emojifier = Emojifier::new();
+    let emojifier = Emojifier::new();
     println!("{}", emojifier.emojify(&input));
 }

@@ -23,30 +23,29 @@ pub fn build_emoji_store() -> Vec<&'static Emoji> {
 
 pub struct Emojifier {
     pub emoji_store: Vec<&'static Emoji>,
-    pub rng: ThreadRng,
 }
 
 impl Emojifier {
     pub fn new() -> Self {
         return Self {
             emoji_store: build_emoji_store(),
-            rng: rand::rng(),
         };
     }
 
-    pub fn random_emoji(&mut self) -> &'static Emoji {
-        self.emoji_store[self.rng.random_range(0..self.emoji_store.len())]
+    fn random_emoji(&self, rng: &mut ThreadRng) -> &'static Emoji {
+        self.emoji_store[rng.random_range(0..self.emoji_store.len())]
     }
 
-    pub fn emojify(&mut self, text: &String) -> String {
+    pub fn emojify(&self, text: &String) -> String {
         let mut result: Vec<String> = Vec::new();
+        let mut rng = rand::rng();
         for word in text.trim().split(' ') {
             result.push(word.to_string());
 
-            let mut emoji_count = self.rng.random_range(0..=3);
+            let mut emoji_count = rng.random_range(0..=3);
             let mut emoji_builder = Vec::with_capacity(emoji_count);
             while emoji_count > 0 {
-                emoji_builder.push(self.random_emoji().as_str());
+                emoji_builder.push(self.random_emoji(&mut rng).as_str());
                 emoji_count -= 1;
             }
 
