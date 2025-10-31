@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use axum::{
-    Router, extract::Json, extract::rejection::JsonRejection, http::StatusCode, routing::post, extract::State,
+    Router, extract::Json, extract::State, extract::rejection::JsonRejection, http::StatusCode,
+    routing::post,
 };
 use clap::{self, ArgAction};
 use emojify::Emojifier;
@@ -45,7 +46,8 @@ async fn main() {
         emojifier: Arc::new(Emojifier::new()),
     };
 
-    let app = Router::new().route("/", post(emojify))
+    let app = Router::new()
+        .route("/", post(emojify))
         .with_state(shared_state);
 
     let listener = tokio::net::TcpListener::bind(format!("{}:{}", host, port))
