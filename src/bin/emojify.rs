@@ -10,7 +10,7 @@ fn main() {
             clap::Arg::new("file")
                 .default_value("-")
                 .action(ArgAction::Set)
-                .help("Reads input from the provided file instead."),
+                .help("Reads input from the provided file or STDIN if no value is provided"),
         )
         .get_matches();
 
@@ -30,7 +30,11 @@ fn main() {
     match input_reader.read_to_string(&mut input) {
         Ok(_) => {}
         Err(_) => {
-            println!("Failed to read input from file.");
+            if filename == "-" {
+                println!("Failed to read input from STDIN.");
+            } else {
+                println!("Failed to read input from file.");
+            }
             return;
         }
     };
