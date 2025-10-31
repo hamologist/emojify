@@ -1,24 +1,12 @@
-use emojis::{Emoji, SkinTone};
+use emojis::Emoji;
 use rand::prelude::*;
 
 pub fn build_emoji_store() -> Vec<&'static Emoji> {
-    let mut store: Vec<&Emoji> = Vec::new();
-    for emoji in emojis::iter() {
-        if emoji.group() == emojis::Group::Flags {
-            continue;
-        }
-        match emoji.skin_tone() {
-            Some(skin_tone) => {
-                if skin_tone != SkinTone::Default {
-                    continue;
-                }
-            }
-            None => {}
-        }
-        store.push(emoji);
-    }
-
-    return store;
+    return emojis::iter()
+        .filter(|emoji| -> bool {
+            return emoji.group() != emojis::Group::Flags;
+        })
+        .collect::<Vec<&Emoji>>();
 }
 
 pub struct Emojifier {
