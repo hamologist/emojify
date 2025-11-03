@@ -1,5 +1,5 @@
 # Emojify
-**Emojfiy** is a Rust project for for spicing up a blob of text with a random assortment of emojis.
+**Emojfiy** is a Rust project for spicing up a blob of text with a random assortment of emojis.
 The package includes both an API and CLI frontend for running the emojification logic.
 
 ## Installation
