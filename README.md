@@ -53,7 +53,7 @@ Here is an example of what using the tool looks like:
 ```bash
 $ echo 'Emojify my message with a bunch of emojis please!!!' | emojify
 ```
-The above will return an emojified version of your message:
+The above will return an emojified version of your message.
 
 ### API
 A `emojify-api` command will be installed on your system.
