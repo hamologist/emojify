@@ -1,18 +1,37 @@
 # Emojify
 **Emojfiy** is a Rust project for spicing up a blob of text with a random assortment of emojis.
-The package includes both an API and CLI frontend for running the emojification logic.
+The project includes both a Server and CLI frontend for running the emojification logic.
+The project also provides a library for interfacing the project with other Rust projects.
+Lastly, wasm support is included so the emojification logic can be run on browser.
+
+## Demo
+For those wanting to get a quick showcase of the project, a demo using the project wasm target can be found [here](https://www.hamologist.com/demos/emojify/).
 
 ## Installation
 
 ### Local Installation
-You can install the package directly to your machine using cargo:
+You can install tools from the project directly to your machine using cargo.
+
+CLI:
 ```bash
-$ cargo install --git https://github.com/hamologist/emojify.git --branch main
+$ cargo install --git https://github.com/hamologist/emojify.git --branch main emojify-cli
 ```
 
-Likewise, you can uninstall the application using:
+Server:
 ```bash
-$ cargo uninstall emojify
+$ cargo install --git https://github.com/hamologist/emojify.git --branch main emojify-server
+```
+
+You can uninstall either of the above tools using:
+
+CLI:
+```bash
+$ cargo uninstall emojify-cli
+```
+
+Server:
+```bash
+$ cargo uninstall emojify-server
 ```
 
 ### Docker
@@ -27,7 +46,7 @@ Next, run a container using the image you built:
 ```bash
 $ docker run -p 3000:3000 --rm emojify
 ```
-This will run the `emojify-api` command (further detailed below) on host 0.0.0.0 and port 3000.
+This will run the `emojify-server` command (further detailed below) on host 0.0.0.0 and port 3000.
 
 If you'd rather run `emojify` via the CLI, you can do so using:
 ```bash
@@ -55,8 +74,8 @@ $ echo 'Emojify my message with a bunch of emojis please!!!' | emojify
 ```
 The above will return an emojified version of your message.
 
-### API
-A `emojify-api` command will be installed on your system.
+### Server
+An `emojify-server` command will be installed on your system.
 If executed, the server will start running on host 0.0.0.0 and port 3000 by default.
 These values can be changed using the `--host` and `--port` command line arguments.
 The server takes requests on its "/" endpoint. Requests must be a POST.
@@ -75,5 +94,12 @@ curl --location --request POST 'localhost:3000' \
 --data-raw '{
     "input": "Emojify my message with a bunch of emojis please!!!"
 }'
+```
+
+## Building the project for wasm
+For those interested in generating the project's wasm a `Makefile` is provided.
+Assuming you've already installed `wasm-bindgen` and `wasm-opt` you can generate a wasm `pkg` directory using:
+```bash
+make wasm
 ```
 
